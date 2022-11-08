@@ -17,9 +17,6 @@ public class TCPServer {
             System.out.println("Escutando socket:"+e.getMessage());
         }
 	}
-    public void CriarDiretorio(){
-        
-    }
 }
 class Connection extends Thread {
 
@@ -31,7 +28,7 @@ class Connection extends Thread {
 		try {
 			clientSocket = aClientSocket;
 			in = new DataInputStream(clientSocket.getInputStream());
-			out =new DataOutputStream(clientSocket.getOutputStream());
+			out = new DataOutputStream(clientSocket.getOutputStream());
 			this.start();
 		} 
         catch(IOException e) {
@@ -42,7 +39,14 @@ class Connection extends Thread {
 		try {			                 // an echo server
 			String data = in.readUTF();	                  // read a line of data from the stream
 			System.out.println("Mensagem recebida do client: "+data);
-			out.writeUTF(data+"\nMensagem adicionada do server");
+			switch (data) {
+				case "1":
+					data = in.readUTF();	  
+					break;
+			
+				default:
+					break;
+			}
 		}
         catch (EOFException e){
             System.out.println("EOF:"+e.getMessage());
@@ -56,5 +60,13 @@ class Connection extends Thread {
             } catch (IOException e){
                 // Falha no fechamento
             }}
+	}
+	public void CriarDiretorio(String CaminhoDiretorio) throws IOException{
+		File novoDiretorio = new File("./CaminhoDiretorio");
+		if (novoDiretorio.exists()) {
+			throw new IOException();
+		}
+		novoDiretorio.mkdirs();	
+		System.out.println("Pasta Criada");
 	}
 }
